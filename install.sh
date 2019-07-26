@@ -19,13 +19,13 @@ if [[ $EUID -ne 0 ]]; then
 
 	# Install package
 	echo "Installing Spotify Support"
-	sudo apt-get -y install raspotify
+	wget https://dtcooper.github.io/raspotify/raspotify-latest.deb
+	sudo dpkg -i raspotify-latest.deb
 
 	# Script for Airplay
 	echo "Installing Airplay Support"
 	git clone https://github.com/mikebrady/shairport-sync.git
 	cd shairport-sync
-
 	autoreconf -fi
 	./configure --sysconfdir=/etc --with-alsa --with-soxr --with-avahi --with-ssl=openssl --with-systemd
 	make
