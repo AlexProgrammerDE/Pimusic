@@ -10,23 +10,23 @@ I am not a good programmer so I cant help everyone.
 Now comes the fun part. 
 
 First we update the system and install git.
-
+```
 sudo apt-get update && sudo apt-get upgrade && sudo apt-get install git
-
+```
 This can take some time...
 
 Now we clone my repository.
-
+```
 git clone https://github.com/AlexProgrammerDE/Pi-Soundplayer.git
-
+```
 After the repository is cloned we go in it.
-
+```
 cd Pi-Soundplayer
-
+```
 Now we run my installation script.
-
+```
 sudo bash install.sh
-
+```
 So youre finished good luck. :)
 
 
