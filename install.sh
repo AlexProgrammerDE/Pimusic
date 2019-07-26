@@ -39,7 +39,7 @@ if [[ $EUID -ne 0 ]]; then
 
 	# Bluetooth script
 	echo "Installing Bluetooth Support"
-	git clone https://github.com/AdityaTelange/rpi-bluetooth-audio-player.git
+	git clone https://github.com/AlexProgrammerDE/rpi-bluetooth-audio-player.git
 	cd rpi-bluetooth-audio-player
 	export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
 	export UDEV=1
