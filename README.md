@@ -1,12 +1,12 @@
 # Pi-Soundplayer
 
-This Repository is created to give everyone the chance to play Music on the Pi.
+This repository is created to give everyone the possibility to play Music on the Raspberry Pi.
 
-This Repository installs multiple Sound services to let you play music by Spotify Connect, Airplay and Bluetooth.
+This Repository installs multiple music service repositorys to let you play music by Spotify Connect, Airplay and Bluetooth.
 
 I want to add Google Assistant, Alexa and Mopidy.
 
-I am not a good programmer so I cant help everyone.
+I am not a good programmer so I cant help very much.
 
 I am using already the following repositorys:
 
