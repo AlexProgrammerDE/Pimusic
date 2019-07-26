@@ -67,7 +67,6 @@ if [[ $EUID -ne 0 ]]; then
 
 	echo "done !!!"
 	echo "starting bt player"
-	systemctl enable bluetooth-player.service
 	systemctl start bluetooth-player.service
 
 fi
