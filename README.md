@@ -4,11 +4,11 @@ This repository is created to give everyone the possibility to play Music on the
 
 This Repository installs multiple music service repositorys to let you play music by Spotify Connect, Airplay and Bluetooth.
 
-I want to add Mopidy. 
+This is my first real projekt so dont be too hard to me when somethig not works.
 
-So watch my project.
+I am not a good programmer.
 
-I am not a good programmer so I cant help very much.
+But report me the Issue and I will try to fix it.
 
 I am using already the following repositorys:
 
