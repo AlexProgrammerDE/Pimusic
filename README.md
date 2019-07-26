@@ -19,6 +19,14 @@ Now we clone my repository.
 
 git clone https://github.com/AlexProgrammerDE/Pi-Soundplayer.git
 
+After the repository is cloned we go in it.
+
+cd Pi-Soundplayer
+
 Now we run my installation script.
+
+sudo bash install.sh
+
+So youre finished good luck. :)
 
 
