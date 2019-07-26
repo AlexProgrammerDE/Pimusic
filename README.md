@@ -22,9 +22,11 @@ Maybe there can be found help.
 
 Now comes the fun part. 
 
-First we update the system and install git.
+First we update the system and install git. (Copy this whole command)
 ```
-sudo apt-get update && sudo apt-get upgrade && sudo apt-get install git
+sudo apt-get update \
+sudo apt-get upgrade \
+sudo apt-get install git
 ```
 This can take some time...
 
