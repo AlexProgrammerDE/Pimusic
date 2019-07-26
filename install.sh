@@ -26,6 +26,7 @@ if [[ $EUID -ne 0 ]]; then
 	echo "Installing Airplay Support"
 	git clone https://github.com/mikebrady/shairport-sync.git
 	cd shairport-sync
+	echo "Wait please. This can take some time."
 	autoreconf -fi
 	./configure --sysconfdir=/etc --with-alsa --with-soxr --with-avahi --with-ssl=openssl --with-systemd
 	make
