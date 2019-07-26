@@ -4,7 +4,7 @@ This repository is created to give everyone the possibility to play Music on the
 
 This Repository installs multiple music service repositorys to let you play music by Spotify Connect, Airplay and Bluetooth.
 
-I want to add Google Assistant, Alexa and Mopidy. 
+I want to add Mopidy. 
 
 So watch my project.
 
