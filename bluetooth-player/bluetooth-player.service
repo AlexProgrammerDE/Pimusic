@@ -1,0 +1,16 @@
+[Unit]
+Description=bluetooth music player
+Requisite=dietpi-ramdisk.service
+After=dietpi-boot.service network-online.target network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+KillMode=process
+ExecStart=/bin/dash -c '/usr/local/bin/start_bt_player 2>&1 | tee /tmp/bluetooth-player.log'
+
+[Install]
+WantedBy=multi-user.target
+Alias=bluetooth-player.service
