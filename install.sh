@@ -8,10 +8,10 @@ if [[ $EUID -ne 0 ]]; then
 	# Get updates
 	echo "Updating System"
 	sudo apt-get update
-	sudo apt-get upgrade
+	sudo apt-get -y upgrade
 	# Install needed packages
 	echo "Getting needed Packages"
-	sudo apt-get -y install gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 python-gst-1.0 python-dev python-pip curl alsa-base alsa-utils bluealsa bluez bluez-firmware python-gobject python-dbus mpg123 apt-transport-https uild-essential git xmltoman autoconf automake libtool libpopt-dev libconfig-dev libasound2-dev avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
+	sudo apt-get -y install gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 python-gst-1.0 python-dev python-pip curl alsa-base alsa-utils bluealsa bluez bluez-firmware python-gobject python-dbus mpg123 apt-transport-https dh-autoreconf uild-essential git xmltoman autoreconf autoconf automake libtool libpopt-dev libconfig-dev libasound2-dev avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
 
 	# Add repo and its GPG key
 	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
