@@ -7,9 +7,13 @@ I want to add Google Assistant, Alexa and Mopidy.
 I am not a good programmer so I cant help everyone.
 
 I am using already the following repositorys:
+
 Spotify Connect: https://github.com/dtcooper/raspotify
+
 Airplay: https://github.com/mikebrady/shairport-sync
+
 Bluetooth: https://github.com/AdityaTelange/rpi-bluetooth-audio-player
+
 Maybe there can be found help.
 
 Now comes the fun part. 
