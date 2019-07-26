@@ -17,4 +17,8 @@ This can take some time...
 
 Now we clone my repository.
 
-git clone 
+git clone https://github.com/AlexProgrammerDE/Pi-Soundplayer.git
+
+Now we run my installation script.
+
+
