@@ -1,0 +1,1208 @@
+<?xml version="1.0"?><!--*-nxml-*-->
+<!DOCTYPE manpage SYSTEM "xmltoman.dtd">
+<?xml-stylesheet type="text/xsl" href="xmltoman.xsl" ?>
+
+  <!--
+  This man page source file is part of shairport-sync.
+  Copyright (c) Mike Brady 2014-2019
+
+  All rights reserved.
+ 
+  Permission is hereby granted, free of charge, to any person
+  obtaining a copy of this software and associated documentation
+  files (the "Software"), to deal in the Software without
+  restriction, including without limitation the rights to use,
+  copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the
+  Software is furnished to do so, subject to the following conditions:
+ 
+  The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+ 
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+  <manpage name="shairport-sync" section="7" desc="Synchronised Audio Player for iTunes / AirPlay">
+
+	<synopsis>
+	<!--
+      <cmd>shairport-sync <opt>-D</opt> <arg>interface</arg></cmd>
+  -->
+      <cmd>shairport-sync  <opt>[-djvuw]</opt>
+      <opt>[-a </opt><arg>name</arg><opt>]</opt>
+      <opt>[-A </opt><arg>latency</arg><opt>]</opt>
+      <opt>[-B </opt><arg>command</arg><opt>]</opt>
+      <opt>[-c </opt><arg>configurationfile</arg><opt>]</opt>
+      <opt>[-E </opt><arg>command</arg><opt>]</opt>
+      <opt>[--get-cover-art]</opt>
+      <opt>[--logOutputLevel]</opt>
+      <opt>[-L </opt><arg>latency</arg><opt>]</opt>
+      <opt>[-m </opt><arg>backend</arg><opt>]</opt>
+      <opt>[--meta-dir=</opt><arg>directory</arg><opt>]</opt>
+      <opt>[-o </opt><arg>backend</arg><opt>]</opt>
+      <opt>[--password=</opt><arg>secret</arg><opt>]</opt>
+      <opt>[-r </opt><arg>threshold</arg><opt>]</opt>
+      <opt>[--statistics]</opt>
+      <opt>[-S </opt><arg>mode</arg><opt>]</opt>
+      <opt>[-t </opt><arg>timeout</arg><opt>]</opt>
+      <opt>[--tolerance=</opt><arg>frames</arg><opt>]</opt>
+      <opt>[-- </opt><arg>audio_backend_options</arg><opt>]</opt>
+      </cmd>
+      <cmd>shairport-sync <opt>-k</opt></cmd>
+      <cmd>shairport-sync <opt>-h</opt></cmd>
+      <cmd>shairport-sync <opt>-V</opt></cmd>
+	</synopsis>
+
+  <description>
+    <p>Shairport Sync plays 
+    audio streamed from iTunes 
+    or from an AirPlay device to an ALSA-compatible audio output device (available on 
+    Linux and FreeBSD), to a "sndio" output device (available on OpenBSD, FreeBSD and 
+    Linux), to a PulseAudio output stream or to Jack Audio.</p>
+    
+    <p>Shairport Sync offers full audio synchronisation.
+    Full audio synchronisation means that audio is played on the output device at exactly 
+    the time specified by the audio source.
+    This means that if many devices are playing the same stream at the same
+    time, all the outputs will stay in synchrony with one another.
+    This allows multiple devices to play the same source without getting out of step with 
+    one another, enabling, for example, simultaneous multi-room operation.
+    </p>
+    
+    <p>Shairport Sync can stream synchronised audio to a unix 
+    pipe or to standard output, or to audio systems that do not provide timing 
+    information. This could perhaps be described as partial audio synchronisation, where 
+    synchronised audio is provided by Shairport Sync, but what happens to it in the 
+    subsequent processing chain, before it reaches the listener's ear, is outside the 
+    control of shairport-sync.</p>
+    <p>Shairport Sync can be compiled to stream metadata, including cover art, to a pipe 
+    or socket.</p>
+    <p>Shairport Sync can be compiled to offer a standard MPRIS interface, a "native" 
+    D-Bus interface and an MQTT client interface. Through these interfaces, it can provide 
+    metadata, including cover art, and can offer remote control of the audio source.</p>
+    
+    <p>Settings can be made using the configuration file (recommended for all new 
+    installations) or by using command-line options.</p>
+    
+    <p>The name of the Shairport Sync executable is <opt>shairport-sync</opt>.
+    Both names are used in these man pages.</p>
+    
+	</description>
+		
+	
+	<section name="Configuration File Settings">
+	   <p>You should use the configuration file for setting up Shairport Sync.
+	  This file is usually <file>shairport-sync.conf</file> and is generally located in the
+	  System Configuration Directory, which is normally the <file>/etc</file> directory in 
+	  Linux or the <file>/usr/local/etc</file> directory in BSD unixes.
+	  You may need to have root privileges to modify it.</p>
+	  
+	  <p>(Note: Shairport Sync may have been compiled to use a different configuration 
+	  directory. You can determine which by performing the command <file>$ shairport-sync 
+	  -V</file>. One of the items in the output string is the value of the 
+	  <opt>sysconfdir</opt>,
+	  i.e. the System Configuration Directory.)</p>
+	  
+	  
+	  <p>Within the configuration file, settings are organised into <i>groups</i>, for 
+	  example, there is a "general" group of
+	  standard settings, and there is an "alsa" group with settings that pertain to the ALSA
+	  back end. Here is an example of a typical configuration file:</p>
+	  
+	  <p><opt>general = {</opt></p>
+    <p><p><opt>name = "Mike's Boombox";</opt></p></p>
+    <p><p><opt>interpolation = "soxr";</opt></p></p>
+    <p><p><opt>password = "secret";</opt></p></p>
+    <p><p><opt>output_backend = "alsa";</opt></p></p>
+    <p><opt>};</opt></p>
+    <p><opt></opt></p>
+    <p><opt>alsa = {</opt></p>
+    <p><p><opt>output_device = "hw:0";</opt></p></p>
+    <p><p><opt>mixer_control_name = "PCM";</opt></p></p>
+    <p><opt>};</opt></p>
+	  
+	  <p>Most settings have sensible default values, so -- as in the example above -- users 
+	  generally only need to set (1) the service name, (2) a password (if desired) and
+	  (3) the output device. If the output device has a mixer that can be used for volume 
+	  control, then (4) the volume control's name should be specified. It is highly 
+	  desirable to use the output device's mixer for volume control, if available -- 
+	  response time is reduced to zero and the processor load is reduced. In the example 
+	  above, "soxr" interpolation was also enabled.</p>
+	  
+	  <p>A sample configuration file with all possible settings, but with all of them 
+	  commented out, is installed at <file>shairport-sync.conf.sample</file>, within the 
+	  System Configuration Directory -- <file>/etc</file> in Linux, 
+	  <file>/usr/local/etc</file> in BSD unixes.</p>
+	  
+	  <p>To retain backwards compatibility with previous versions of shairport-sync
+	  you can use still use command line options, but any new features, etc. will
+	  be available only via configuration file settings.</p>
+
+	  <p>The configuration file is processed using the <file>libconfig</file> library
+	  -- see <url href="http://www.hyperrealm.com/libconfig/libconfig_manual.html"/>.</p>
+
+    <option><p><opt>"GENERAL" SETTINGS</opt></p></option>
+    <p>These are the settings available within the <opt>general</opt> group:</p>
+
+    <option>
+		<p><opt>name=</opt><arg>"service_name"</arg><opt>;</opt></p>
+		<optdesc>
+		<p>Use this <arg>service_name</arg> to identify this player in iTunes, etc.</p>
+		<p>The following substitutions are allowed:
+		<opt>%h</opt> for the computer's hostname,
+		<opt>%H</opt> for the computer's hostname with the first letter capitalised (ASCII 
+		only),
+		<opt>%v</opt> for the shairport-sync version number, e.g. "3.0.1" and
+		<opt>%V</opt> for the shairport-sync version string, e.g. 
+		"3.0.1-OpenSSL-Avahi-ALSA-soxr-metadata-sysconfdir:/etc".</p>
+    <p>The default is "%H", which is replaced by the hostname with the first letter 
+    capitalised.</p>
+    </optdesc>
+	  </option>
+	  
+	  <option>
+    <p><opt>password=</opt><arg>"password"</arg><opt>;</opt></p>
+    <optdesc><p>Require the password <arg>password</arg> to connect to the service. If you 
+    leave this setting commented out, no password is needed.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>interpolation=</opt><arg>"mode"</arg><opt>;</opt></p>
+    <optdesc><p>Interpolate, or "stuff", the audio stream using the <arg>mode</arg>.  
+    Interpolation here refers to the
+    process of adding or removing frames of audio  to  or  from  the
+    stream sent to the output device to keep it exactly in synchrony
+    with the player.
+    The default mode, "basic", is normally almost  completely  inaudible.
+    The  alternative mode, "soxr", is even less obtrusive but
+    requires much more processing power. For this mode, support for
+    libsoxr, the SoX Resampler Library, must be selected when
+    shairport-sync is compiled.
+		</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>output_backend=</opt><arg>"backend"</arg><opt>;</opt></p>
+    <optdesc><p>shairport-sync has a number of modules of code ("backends") through which 
+    audio is output. Normally, the first audio backend that works is selected. This 
+    setting forces the selection of the specific audio <arg>backend</arg>. Perform the 
+    command <opt>shairport-sync -h</opt> to get a list of available audio backends -- the 
+    default is the first on this list. Only the "alsa", "sndio" and "pa" backends support 
+    synchronisation.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>mdns_backend=</opt><arg>"backend"</arg><opt>;</opt></p>
+    <optdesc><p>shairport-sync has a number of modules of code ("backends") for 
+    interacting with the mDNS service to be used to advertise itself. Normally, the first 
+    mDNS backend that works is selected. This setting forces the selection of the specific 
+    mDNS <arg>backend</arg>. The default is "avahi". Perform the command 
+    <opt>shairport-sync -h</opt> to get a list of available mDNS modules.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>port=</opt><arg>portnumber</arg><opt>;</opt></p>
+    <optdesc><p>Use this to specify the <arg>portnumber</arg> shairport-sync uses to 
+    listen for service requests from iTunes, etc. The default is port 5000.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>udp_port_base=</opt><arg>portnumber</arg><opt>;</opt></p>
+    <optdesc><p>When shairport-sync starts to play audio, it establises three UDP 
+    connections to the audio source. Use this setting to specify the starting 
+    <arg>portnumber</arg> for these three ports. It will pick the first three unused ports 
+    starting from <arg>portnumber</arg>. The default is port 6001.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>udp_port_range=</opt><arg>range</arg><opt>;</opt></p>
+    <optdesc><p>Use this in conjunction with the previous setting to specify the 
+    <arg>range</arg> of ports that can be checked for availability. Only three ports are 
+    needed.
+    The default is 100, thus 100 ports will be checked from port 6001 upwards until three 
+    are found.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>drift_tolerance_in_seconds=</opt><arg>seconds</arg><opt>;</opt></p>
+    <optdesc><p>Allow playback to drift up to <arg>seconds</arg> out of exact 
+    synchronization before attempting to correct it.
+		The default is 0.002 seconds, i.e. 2 milliseconds. The smaller the tolerance, the more 
+		likely it is that overcorrection will occur.
+		Overcorrection is when more corrections (insertions and deletions) are made than are 
+		strictly necessary to keep the stream in sync. Use the <opt>statistics</opt> setting 
+		to monitor correction levels. Corrections should not greatly exceed net corrections. 
+		This setting replaces the deprecated <opt>drift</opt> setting.
+		</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>resync_threshold_in_seconds=</opt><arg>threshold</arg><opt>;</opt></p>
+    <optdesc><p>Resynchronise if timings differ by more than <arg>threshold</arg> seconds.
+    If the output timing differs from the source timing by more than
+    the threshold, output will be muted and a full resynchronisation
+    will occur. The default threshold is 0.050 seconds, i.e. 50
+    milliseconds. Specify 0.0 to disable resynchronisation.
+    This setting replaces the deprecated <opt>resync_threshold</opt> setting.
+    </p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>ignore_volume_control=</opt><arg>"choice"</arg><opt>;</opt></p>
+    <optdesc><p>Set this <arg>choice</arg> to <arg>"yes"</arg> if you want the volume to 
+    be at 100% no matter what the source's volume control is set to.
+    This might be useful if you want to set the volume on the output device, independently 
+    of the setting at the source. The default is <arg>"no"</arg>.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>volume_range_db=</opt><arg>dBvalue</arg><opt>;</opt></p>
+    <optdesc><p>Use this <arg>dBvalue</arg> to reduce or increase the attenuation range, 
+    in decibels, between the minimum and maximum volume.</p>
+    <p>For example, if a mixer has a minimum volume of -80 dB and a maximum of +20 dB, you 
+    might wish to use only 60 dB of the 100 dB available.
+    This might be because the sound becomes inaudible at the lowest setting and unbearably 
+    loud at the highest setting --
+    indeed, many domestic HiFi systems have a volume control range of just 60 to 80dB.</p>
+    <p>Another potential use might be where the range specified by the mixer does not 
+    match the capabilities of the device.
+    For example, the Raspberry Pi's DAC that feeds the built-in audio jack claims a range 
+    of 106 dB but has a useful range of only about 30 dB.
+    The setting allows you to specify the maximum range from highest to lowest.
+    The range suggested for the Raspberry Pi's built-in audio DAC, which feeds the 
+    headphone jack, is 30.
+    Using it in this case gives the volume control a much more useful range of 
+    settings.</p>
+    <p>As a third example, you can actually extend the range provided by a mixer.
+    Many cheaper DACs have hardware mixers that offer a restricted attenuation range.
+    If you specify a volume range greater than the range of the mixer, software 
+    attenuation and hardware attenuation will be combined to give the specified range.</p>
+    <p>If you omit this setting, the native range of the mixer is used.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>volume_max_db=</opt><arg>dBvalue</arg><opt>;</opt></p>
+    <optdesc><p>Specify the maximum output level to be used with the hardware mixer, if 
+    used. If no hardware mixed is used, this setting specifies the maximum setting 
+    permissible in the software mixer, which has an attenuation range from 0.0 dB down to 
+    -96.3 dB.
+    </p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>volume_control_profile=</opt><arg>"choice"</arg><opt>;</opt></p>
+    <optdesc><p>Use this advanced setting to specify how the airplay volume is transferred 
+    to the mixer volume. The <arg>"standard"</arg> profile, which is the default, makes 
+    the volume change more quickly at lower volumes and slower at higher volumes. Choose 
+    the <arg>"flat"</arg> profile to makes the volume change at the same rate at all 
+    volume levels.
+    </p></optdesc>
+    </option>
+
+    <option>    
+    <p><opt>volume_range_combined_hardware_priority=</opt>
+      <arg>"choice"</arg><opt>;</opt></p>
+    <optdesc><p>Use this advanced setting to specify how to combine the hardware 
+    attenuator with software attenuation to provide a greater attenuation range than the 
+    hardware attenuator alone can provide. Choosing <arg>"yes"</arg> means that when 
+    attenuation is  required, the hardware attenuator will be used in preference.
+    If more attenuation than it can provide is needed, the hardware attenuator is set to 
+    its greatest attenuation and software attenuation is added.</p>
+    <p>For example, if 40 dB of attenuation is required  and the hardware attenuator 
+    offers a maximum of 30 dB, then the hardware attenuator will be set to give 30 dB 
+    attenuation and 10 dB of software attenuation will be added.</p> 
+    <p>Unfortunately, certain hardware attenuators will mute at their greatest 
+    attenuation, so can't be combined with software attenuation in this way. Choosing 
+    <arg>"no"</arg> means that software attenuation is used to bring the remaining 
+    attenuation required  into the range offered by the hardware attenuator.
+    This is the default.
+    </p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>run_this_when_volume_is_set=</opt>
+      <arg>"/full/path/to/application/and/args"</arg><opt>;</opt></p>
+    <optdesc><p>Here you can specify a program and its arguments that will be run when the 
+    volume is set or changed. Be careful to include the full path to the application.
+    The application must be marked as executable and, if it is a script, its first line 
+    must begin with the standard shebang <file>#!/bin/...</file> as appropriate.</p>
+    <p>The desired AirPlay volume is appended to the end of the command line -- leave a 
+    space at the end of the command line you specify here if you want it treated as an 
+    extra argument.
+    AirPlay volume goes from 0.0 to -30.0 and -144.0 means "mute".</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>regtype=</opt><arg>"regTypeString"</arg><opt>;</opt></p>
+    <optdesc><p>Use this advanced setting to set the service type and transport to be 
+    advertised by Zeroconf/Bonjour. Default is <arg>"_raop._tcp"</arg>.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>playback_mode=</opt><arg>"mode"</arg><opt>;</opt></p>
+    <optdesc><p>The <arg>mode</arg> can be "stereo", "mono", "reverse stereo", "both left" 
+    or "both right". Default is "stereo". Note that dither will be added to the signal in 
+    the mono mode.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>alac_decoder=</opt><arg>"decodername"</arg><opt>;</opt></p>
+    <optdesc><p>This can be "hammerton" or "apple". This advanced setting allows you to 
+    choose the original Shairport decoder by David Hammerton or the Apple Lossless Audio 
+    Codec (ALAC) decoder written by Apple. Shairport Sync must have been compiled with the 
+    configuration setting "--with-apple-alac" and the Apple ALAC decoder library must be 
+    present for this to work.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>interface=</opt><arg>"name"</arg><opt>;</opt></p>
+    <optdesc><p>Use this advanced setting if you want to confine Shairport Sync to the 
+    named interface. Leave it commented out to get the default bahaviour.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>audio_backend_latency_offset_in_seconds=</opt>
+      <arg>offset_in_seconds</arg><opt>;</opt></p>
+    <optdesc><p>Set this <arg>offset_in_seconds</arg> to compensate for a fixed delay in 
+    the audio back end. For example, if the output device delays by 100 ms, set this to 
+    -0.1.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>audio_backend_buffer_desired_length_in_seconds=</opt>
+      <arg>length_in_seconds</arg><opt>;</opt></p>
+    <optdesc><p>Use this <arg>length_in_seconds</arg> to set the desired length of the 
+    queue of audio frames in the backend's output buffer.</p>
+    <p>The default is 0.15 seconds for the ALSA backend, 0.35 seconds for the PA backend 
+    and one second for all other backends.</p>
+    <p>If this value is set too small, underflow may occur on low-powered machines.
+    If set too large, the response times to the volume control may become excessive, or it 
+    may exceed the backend's buffer size.
+    It may need to be larger on low-powered machines that are also performing other tasks, 
+    such as processing metadata.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>audio_backend_buffer_interpolation_threshold_in_seconds=</opt>
+      <arg>time_in_seconds</arg><opt>;</opt></p>
+    <optdesc><p>This is an advanced feature. If the length of the audio backend buffer 
+    size drops below this, it's a sign that shairport sync can not process frames of audio 
+    quickly enough. It this threshold is reached, shairport sync will stop using
+    time-consuming interpolation like soxr to avoid underruns.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>audio_backend_silent_lead_in_time=</opt>
+    <arg>lead_in_time_in_seconds</arg><opt>;</opt></p>
+    <optdesc><p>This is an advanced setting. Use the <arg>lead_in_time_in_seconds</arg> to 
+    set the desired length of the period of silence (a "silent lead-in") played before a 
+    play session begins.</p>
+    <p>The purpose of this silent lead-in is to give the backend sufficient time to 
+    prepare for operation and to make an estimate (and, importantly,  to correct the 
+    estimate) of the exact time at which to begin playing audio to achieve initial 
+    synchronisation. The value can be from 0.0 up to a maximum of either 4.0 seconds. The 
+    actual duration will be close to the setting but can not exceed the latency set by the 
+    client, usually 2 seconds or a little more.</p>
+    <p>If the value chosen is too short for synchronised backends such as the ALSA, sndio 
+    or PA backends, then audio will not be synchronised correctly at the start of play.
+    The default is to have a silent lead-in of approximately the same time as the latency 
+    set by the client.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>dbus_service_bus=</opt>
+      <arg>"bus_name"</arg><opt>;</opt></p>
+    <optdesc><p>If shairport sync is compiled with the D-Bus interface, it can offer it on 
+    the <arg>"system"</arg> or the <arg>"session"</arg> D-Bus "bus".
+    Use this to specify  which. The default is to use the "system" bus.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>mpris_service_bus=</opt>
+      <arg>"bus_name"</arg><opt>;</opt></p>
+    <optdesc><p>If shairport sync is compiled with the MPRIS interface, it can offer the 
+    service on the <arg>"system"</arg> or the <arg>"session"</arg> D-Bus "bus".
+    Use this to specify  which. The default is to use the "system" bus.</p></optdesc>
+    </option>
+
+    <option><p><opt>"SESSIONCONTROL" SETTINGS</opt></p></option>
+
+    <option>
+    <p><opt>run_this_before_play_begins=</opt><arg>"/path/to/application and 
+      args"</arg><opt>;</opt></p>
+    <optdesc><p>Here you can specify a program and its arguments that will be run just 
+    before a play session begins. Be careful to include the full path to the application.
+    The application must be marked as executable and, if it is a script, its first line 
+    must begin with the standard shebang <file>#!/bin/...</file> as 
+    appropriate.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>run_this_after_play_ends=</opt><arg>"/path/to/application and 
+      args"</arg><opt>;</opt></p>
+    <optdesc><p>Here you can specify a program and its arguments that will be run just 
+    after a play session ends. Be careful to include the full path to the application.
+    The application must be marked as executable and, if it is a script, its first line 
+    must begin with the standard shebang <file>#!/bin/...</file> as 
+    appropriate.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>run_this_before_entering_active_state=</opt><arg>"/path/to/application and 
+      args"</arg><opt>;</opt></p>
+    <optdesc><p>Here you can specify a program and its arguments that will be run just 
+    before shairport-sync goes active.</p>
+    
+    <p>Shairport Sync goes "active" when a play session starts. When the play 
+    session ends, the system will stay active until the time 
+    specified in the <opt>active_state_timeout</opt> setting elapses.
+    If a new play session starts before that, the system will remain active. Otherwise, 
+    the system will go inactive.
+    </p>
+     
+    <p>Be careful to include the full path to the application.
+    The application must be marked as executable and, if it is a script, its first line 
+    must begin with the standard shebang <file>#!/bin/...</file> as 
+    appropriate.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>run_this_after_exiting_active_state=</opt><arg>"/path/to/application and 
+      args"</arg><opt>;</opt></p>
+    <optdesc><p>Here you can specify a program and its arguments that will be run just 
+    after shairport-sync goes inactive (see the previous entry for an explanation
+    of the idea).
+    Be careful to include the full path to the application.
+    The application must be marked as executable and, if it is a script, its first line 
+    must begin with the standard shebang <file>#!/bin/...</file> as 
+    appropriate.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>active_state_timeout=</opt><arg>seconds</arg><opt>;</opt></p>
+      <optdesc><p>After a play session has ended, the system will remain active for 
+    <arg>seconds</arg> seconds. If a new play session starts before this time has elapsed, 
+    the system will remain active. However, if no new session starts in the interval, the 
+    system will go inactive at the end of it. The default is 10 seconds.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>run_this_if_an_unfixable_error_is_detected=</opt><arg>"/path/to/application 
+    and args"</arg><opt>;</opt></p>
+      <optdesc><p>Here you can specify a program and its arguments that will be run if the 
+    system detects an unfixable error. At present, there are two types of
+    unfixable errors. One is where a play session cannot be terminated. 
+    The second is if an output device has "stalled" -- that is, if an output device 
+    refuses to accept any more output frames.</p>
+    <p>Although the first problem could, in principle, be fixed by restarting
+    Shairport Sync, it is usually caused by a malfunctioning output device.
+    Typically, the most reliable way to recover from either of these errors
+    is to reboot the entire machine.</p>
+    <p>Be careful to include the full path to the application.
+    The application must be marked as executable and, if it is a script, its first line 
+    must begin with the standard shebang <file>#!/bin/...</file> as 
+    appropriate.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>wait_for_completion=</opt><arg>"choice"</arg><opt>;</opt></p>
+    <optdesc><p>Set <arg>choice</arg> to "yes" to make shairport-sync wait until the 
+    programs specified in the <opt>run_this_...</opt> settings have 
+    completed execution before continuing. The default is "no".</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>allow_session_interruption=</opt><arg>"choice"</arg><opt>;</opt></p>
+    <optdesc><p>If <opt>choice</opt> is set to "yes", then another source will be able to 
+    interrupt an existing play session and start a new one.
+    When set to "no" (the default), other devices attempting to interrupt a session will 
+    fail, receiving a busy signal.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>session_timeout=</opt><arg>seconds</arg><opt>;</opt></p>
+    <optdesc><p>If a play session has been established and the source disappears without 
+    warning (such as a device going out of range of a network)
+    then wait for the number of seconds specified before ending the session. 
+    Once the session has terminated, other devices can use it. The default is 120 
+    seconds.</p></optdesc>
+    </option>
+    
+
+    <option><p><opt>"ALSA" SETTINGS</opt></p></option>
+    <p>These settings are for the ALSA back end, used to communicate with audio output 
+    devices in the ALSA system. (By the way, you can use tools such as 
+    <opt>alsamixer</opt> or <opt>aplay</opt> to discover what devices are available.)
+    Use these settings to select the output device and the mixer control to be used to 
+    control the output volume.
+    You can additionally set the desired size of the output buffer and you can adjust 
+    overall latency. Here are the <opt>alsa</opt> group settings:</p>
+
+    <option>
+    <p><opt>output_device=</opt><arg>"output_device"</arg><opt>;</opt></p>
+    <optdesc><p>Use the output device called <arg>output_device</arg>. The default is the 
+    device called <arg>"default"</arg>.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>mixer_control_name=</opt><arg>"name"</arg><opt>;</opt></p>
+    <optdesc><p>Specify the <arg>name</arg> of the mixer control to be used by 
+    shairport-sync to control the volume.
+    The mixer control must be on the mixer device, which by default is the output device.
+    If you do not specify a mixer control name, shairport-sync will adjust the volume in 
+    software.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>mixer_device=</opt><arg>"mixer_device"</arg><opt>;</opt></p>
+    <optdesc><p>By default, the mixer is assumed to be output_device. Use this setting to 
+    specify a device other than the output device.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>output_rate=</opt><arg>frame rate</arg><opt>;</opt></p>
+    <optdesc><p>Use this setting to specify the frame rate to output to the ALSA device. 
+    Allowable values are 44100 (default), 88200, 176400 and 352800. The device must have 
+    the capability to accept the format you specify. There is no particular reason to use 
+    anything other than 44100 if it is available.
+    </p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>output_format=</opt><arg>"format"</arg><opt>;</opt></p>
+    <optdesc><p>Use this setting to specify the format that should be used to send data to 
+    the ALSA device. Allowable values are "U8", "S8", "S16", "S24", "S24_3LE", "S24_3BE" 
+    or "S32". The device must have the capability to accept the format you 
+    specify.</p><p>"S" means signed; "U" means unsigned; BE means big-endian and LE means 
+    little-endian. Except where stated (using *LE or *BE), endianness matches that of the 
+    processor. The default is "S16".</p><p>If you are using a hardware mixer, the best 
+    setting is S16, as audio will pass through Shairport Sync unmodified except for
+    interpolation. If you are using the software mixer, use 32- or 24-bit, if your device 
+    is capable of it, to get the lowest possible levels of dither.
+    </p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>disable_synchronization=</opt><arg>"no"</arg><opt>;</opt></p>
+    <optdesc><p>This is an advanced setting and is for debugging only. Set to 
+    <arg>"yes"</arg> to disable synchronization. Default is <arg>"no"</arg>.
+    If you use it to disable synchronisation, then sooner or later you'll experience audio 
+    glitches due to audio buffer overflow or underflow.
+    </p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>period_size=</opt><arg>number</arg><opt>;</opt></p>
+    <optdesc><p>Use this optional advanced setting to set the alsa period size near to 
+    this value.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>buffer_size=</opt><arg>number</arg><opt>;</opt></p>
+    <optdesc><p>Use this optional advanced setting to set the alsa buffer size near to 
+    this value.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>use_mmap_if_available=</opt><arg>"yes"</arg><opt>;</opt></p>
+    <optdesc><p> Use this optional advanced setting to control whether MMAP-based output 
+    is used to communicate with the DAC. Default is <arg>"yes"</arg>.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>mute_using_playback_switch=</opt><arg>"no"</arg><opt>;</opt></p>
+    <optdesc>
+    <p>This is an advanced setting and the default is <arg>"no"</arg>. If it is set to 
+    <arg>"yes"</arg>, hardware mute will be used where it is available. 
+    Set it to <arg>"no"</arg> to prevent the hardware mute being used.</p>
+    <p>If Shairport Sync is sharing the output device with other applications, it is best 
+    to leave this set to <arg>"no"</arg> for compatibility with those applications.</p>
+    <p>Another motivation for this is to allow the ALSA function call
+    "snd_mixer_selem_set_playback_switch_all" to be avoided. It is incorrectly implemented 
+    on certain soundcards, including the emulated card in VMWare Fusion 8.5.</p>
+    </optdesc>
+    </option>
+
+    <option>
+    <p><opt>maximum_stall_time=</opt><arg>seconds</arg><opt>;</opt></p>
+    <optdesc><p>If an output device fails to accept any audio frames for more than the 
+    time, in seconds, specified here (0.2 seconds by default),
+    it is considered to have malfunctioned. It will result in the
+    <opt>run_this_if_an_unfixable_error_is_detected</opt> program, 
+    if any, being called.</p>
+    <p>Implemented for the ALSA back end only.</p>
+    </optdesc>
+    </option>
+
+    <option>
+    <p><opt>disable_standby_mode=</opt><arg>"never"</arg><opt>;</opt></p>
+    <optdesc>
+    <p>Shairport Sync has a "Disable Standby" feature to eliminate certain 
+    faint-but-annoying audible pops and clicks. When activsted, it prevents
+    an output device from entering standby mode and thus it minimises standby/busy 
+    transitions, which can sometimes be heard. Use this setting to control when the 
+    Disable Standby feature is active: "never" means it will never be activated, "always" 
+    means it will be active as soon as shairport-sync starts running, and "auto" 
+    means it will be active while shairport-sync is in the "active" state.</p> 
+    <p>Shairport Sync goes "active" when a play session starts. When the play 
+    session ends, the system will stay active until the time 
+    specified in the active_state_timeout setting elapses.
+    If a new play session starts before that, the system will remain active. Otherwise, 
+    the system will go inactive.
+    </p>
+    </optdesc>
+    </option>
+
+    <option><p><opt>"SNDIO" SETTINGS</opt></p></option>
+     <p>These settings are for the SNDIO back end, used to communicate with audio output 
+     devices in the SNDIO system.</p>
+
+    <option>
+    <p><opt>device=</opt><arg>"snd/0"</arg><opt>;</opt></p>
+    <optdesc><p>Use this optional setting to specify the name of the output device, e.g. 
+    <arg>"snd/0"</arg>. The default is to use the SNDIO system's default.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>rate=</opt><arg>44100</arg><opt>;</opt></p>
+    <optdesc><p>Use this optional setting to specify the output rate in frames per second. 
+    Valid rates are 44100, 88200, 176400 or 352800.
+    The output device must have the capability to accept data at the specified rate. The 
+    default is 44100.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>format=</opt><arg>"S16"</arg><opt>;</opt></p>
+    <optdesc><p>Use this optional setting to specify the output format.  Allowable values 
+    are "U8", "S8", "S16", "S24", "S24_3LE", "S24_3BE" or "S32".
+    The device must have the capability to accept the format you specify.</p><p>"S" means 
+    signed; "U" means unsigned; BE means big-endian and LE means little-endian.
+    Except where stated (using *LE or *BE), endianness matches that of the processor. The 
+    default is "S16".</p><p>
+    Since the SNDIO backend does not use a hardware mixer for volume control, dither will 
+    be introduced into the output if it is less than full volume.
+    Thus, (unless you are ignoring the volume control setting),
+    consider using 32- or 24-bit output if your device is capable of it, to get the lowest 
+    possible levels of dither.</p>
+    <p>Please note that 32- or 24-bit has not been extensively tested on
+    SNDIO.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>round=</opt><arg>value</arg><opt>;</opt></p>
+    <optdesc><p>Use this optional advanced setting to specify the period size of the SNDIO 
+    channel. If omitted, a SNDIO system default value will be used.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>bufsiz=</opt><arg>value</arg><opt>;</opt></p>
+    <optdesc><p>Use this optional advanced setting to specify the buffer size of the SNDIO 
+    channel. If omitted, a SNDIO system default value will be used.</p></optdesc>
+    </option>
+
+    <option><p><opt>"PA" SETTINGS</opt></p></option>
+    <p>These settings are for the new PulseAudio backend.</p>
+
+    <option>
+    <p><opt>application_name=</opt><arg>"Shairport Sync"</arg><opt>;</opt></p>
+    <optdesc><p>Use this to set the name to appear in the Sounds "Applications" tab when 
+    Shairport Sync is active. The default is the name "Shairport Sync".</p></optdesc>
+    </option>
+
+    <option><p><opt>"PIPE" SETTINGS</opt></p></option>
+    <p>These settings are for the PIPE backend, used to route audio to a named unix pipe. 
+    The audio is in raw CD audio format: PCM 16 bit little endian, 44,100 samples per 
+    second, interleaved stereo.</p>
+
+    <option>
+    <p><opt>name=</opt><arg>"/path/to/pipe"</arg><opt>;</opt></p>
+    <optdesc><p>Use this to specify the name and location of the pipe. The pipe will be 
+    created and opened when shairport-sync starts up and will be closed upon shutdown.
+    Frames of audio will be sent to the pipe in packets of 352 frames and will be 
+    discarded if the pipe has not have a reader attached.
+    The sender will wait for up to five seconds for a packet to be written before
+    discarding it.</p></optdesc>
+    </option>
+     
+    <option><p><opt>"STDOUT" SETTINGS</opt></p></option>
+    <p>There are no settings for the STDOUT backend.</p>
+    
+    <option><p><opt>"AO" SETTINGS</opt></p></option>
+    <p>There are no configuration file settings for the AO backend.</p>
+
+    <option><p><opt>"METADATA" SETTINGS</opt></p></option>
+    <p>shairport-sync can process metadata provided by the source, such as Track Number, 
+    Album Name, cover art, etc. and can provide additional metadata such as volume level,
+    pause/resume, etc. It sends the metadata to a pipe, by default 
+    <file>/tmp/shairport-sync-metadata</file>.
+    To process metadata, shairport-sync must have been compiled with metadata support 
+    included.
+    You can check that this is so by running the command <opt>$ shairport-sync -V</opt>; 
+    the identification string will contain the word <opt>metadata</opt>.</p>
+    <p>Please note that different sources provide different levels of metadata. Some 
+    provide a lot; some provide almost none.</p>
+    <p>The <opt>metadata</opt> group of settings allow you to enable metadata handling and 
+    to control certain aspects of it:</p>
+
+    <option>
+    <p><opt>enabled=</opt><arg>"choice"</arg><opt>;</opt></p>
+    <optdesc><p>Set the <arg>choice</arg> to "yes" to enable shairport-sync to look for 
+    metadata from the audio source and to forward it, along with metadata generated by 
+    shairport-sync itself, to the metadata pipe. The default is "no".</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>include_cover_art=</opt><arg>"choice"</arg><opt>;</opt></p>
+    <optdesc><p>Set the <arg>choice</arg> to "yes" to enable shairport-sync to look for 
+    cover art from the audio source and to include it in the feed to the metadata pipe.
+    You must also enable metadata (see above).
+    One reason for not including cover art is that the images can sometimes be very large 
+    and may delay transmission of subsequent metadata through the pipe.
+    The default is "no".</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>pipe_name=</opt><arg>"filepathname"</arg><opt>;</opt></p>
+    <optdesc><p>Specify the absolute path name of the pipe through which metadata should 
+    be sent The default is <file>/tmp/shairport-sync-metadata</file>.</p></optdesc>
+    </option>
+    
+    <option>
+    <p><opt>socket_address=</opt><arg>"hostnameOrIP"</arg><opt>;</opt></p>
+    <optdesc><p>If <arg>hostnameOrIP</arg> is set to a host name or and IP address, UDP 
+    packets containing metadata will be sent to this address.
+    May be a multicast address. Additionally, <arg>socket-port</arg> must be non-zero and 
+    <arg>enabled</arg> must be set to "yes".</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>socket_port=</opt><arg>port</arg><opt>;</opt></p>
+    <optdesc><p>If <opt>socket_address</opt> is set, use <arg>port</arg> to specify the 
+    port to send UDP packets to. Must not be zero.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>socket_msglength=</opt><arg>65000</arg><opt>;</opt></p>
+    <optdesc><p>The maximum packet size for any UDP metadata. This must be between 500 or 
+    65000. The default is 500.</p></optdesc>
+    </option>
+
+    <option><p><opt>"DIAGNOSTICS" SETTINGS</opt></p></option>
+    <option>
+    <p><opt>statistics=</opt><arg>"setting"</arg><opt>;</opt></p>
+    <optdesc><p>Use this <arg>setting</arg> to enable ("yes") or disable ("no") the output 
+    of some statistical information on the console or in the log. The default is to 
+    disable statistics.</p></optdesc>
+    </option>
+
+    <option>
+    <p><opt>log_verbosity=</opt><arg>0</arg><opt>;</opt></p>
+    <optdesc><p>Use this to specify how much debugging information should be output or 
+    logged. The value <arg>0</arg> means no debug information, <arg>3</arg> means most 
+    debug information. The default is <arg>0</arg>.</p></optdesc>
+    </option>
+    
+	</section>
+
+	<options>
+	  <p>This section is about the command-line options available in shairport-sync.</p>
+    <p>Note: if you are setting up shairport-sync for the first time or are updating an 
+    existing installation, you are encouraged to use the configuration file settings 
+    described above. Most of the command-line options described below
+    simply replicate the configuration settings and are retained to provide backward 
+    compatibility with older installations of shairport-sync.</p>
+    
+    <p>Many  command-line options take sensible default values, so you can normally
+    ignore most of them. See the EXAMPLES section for typical usages.</p>
+
+    <p>There are two kinds of command-line options for shairport-sync:
+    regular <opt>program options</opt> and <opt>audio backend options</opt>.
+    Program options are
+    always listed first, followed by any audio backend options, preceded by
+    a <opt>--</opt> symbol.</p>
+    
+  <section name="Program Options">
+  <p>These command-line options are used by shairport-sync itself.</p>
+  </section>
+  
+	  <option>
+		<p><opt>-a </opt><arg>service name</arg><opt> | --name=</opt><arg>service 
+		name</arg></p>
+		<optdesc><p>
+		Use this <arg>service name</arg> to identify this player in iTunes, etc.</p>
+		
+		<p>The following substitutions are allowed:
+		<opt>%h</opt> for the computer's hostname,
+		<opt>%H</opt> for the computer's hostname with the first letter capitalised (ASCII 
+		only),
+		<opt>%v</opt> for the shairport-sync version number, e.g. "3.0.1" and
+		<opt>%V</opt> for the shairport-sync version string, e.g. 
+		"3.0.1-OpenSSL-Avahi-ALSA-soxr-metadata-sysconfdir:/etc".</p> 
+    <p>The default is "%H", which is replaced by the hostname with the first letter 
+    capitalised.</p>
+    </optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-B </opt><arg>program</arg><opt> | --on-start=</opt><arg>program</arg></p>
+		<optdesc><p>
+		Execute <arg>program</arg> when playback is about to begin. Specify the 
+		full path to the program, e.g. <file>/usr/bin/logger</file>.
+		Executable scripts can be used, but they must have the appropriate shebang
+    (<file>#!/bin/sh</file> in the headline.</p>
+		
+		<p>If you want shairport-sync to wait until the command has
+		completed before starting to play, select the <opt>-w</opt> option as well.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-c </opt><arg>filename</arg><opt> | --configfile=</opt><arg>filename</arg></p>
+		<optdesc><p>
+		Read configuration settings from <arg>filename</arg>. The default is to read them from 
+		the <file>shairport-sync.conf</file> in the System Configuration Directory -- 
+		<file>/etc</file> in Linux, <file>/usr/local/etc</file> in BSD unixes.
+		For information about configuration settings, see the  "Configuration File Settings" 
+		section above.
+    </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-d | --daemon</opt></p>
+		<optdesc><p>
+		Instruct shairport-sync to demonise itself. It will write its
+    Process ID (PID) to a file, usually at
+    <file>/var/run/shairport-sync/shairport-sync.pid</file>, which is used by the
+    <opt>-k</opt>, <opt>-D</opt> and <opt>-R</opt> options to locate
+    the daemon at a later time. See also the <opt>-j</opt> option.  Only available if
+		shaiport-sync has been compiled with libdaemon support.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-E </opt><arg>program</arg><opt> | --on-stop=</opt><arg>program</arg></p>
+		<optdesc><p>
+		Execute <arg>program</arg> when playback has ended. Specify the 
+		full path to the program, e.g. <file>/usr/bin/logger</file>.
+		Executable scripts can be used, but they must have the appropriate shebang
+    (<file>#!/bin/sh</file> in the headline.</p>
+		<p>If you want shairport-sync to wait until the command has
+		completed before continuing, select the <opt>-w</opt> option as well.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>--get-coverart</opt></p>
+		<optdesc><p>
+		This option requires the <opt>--meta-dir</opt> option to be set, and enables
+		shairport-sync to request cover art from the source and to transmit it through
+		the metadata pipe.</p>
+		<p>Please note that cover art data may be very large, and may place too great a
+		burden on your network.
+    </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-h | --help</opt></p>
+		<optdesc><p>
+		Print brief help message and exit.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-j</opt></p>
+		<optdesc><p>
+		Instruct shairport-sync to demonise itself. Unlike the <opt>-d</opt> option, it will 
+		not write a Process ID (PID) to a file -- it will just (hence the "j") demonise 
+		itself.  Only available if shaiport-sync has been compiled with libdaemon support.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-k | --kill</opt></p>
+		<optdesc><p>
+		Kill the shairport-sync daemon and exit. (Requires that the daemon has
+		written its PID to an agreed file -- see the <opt>-d</opt> option. Only available if
+		shaiport-sync has been compiled with libdaemon support.)
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>--logOutputLevel</opt></p>
+		<optdesc><p>
+		Use this to log the volume level when the volume is changed. It may be useful if you 
+		are trying to determine a suitable value for the maximum volume level. Not available 
+		as a configuration file setting.
+    </p>
+    </optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-L | --latency=</opt><arg>latency</arg></p>
+		<optdesc><p>
+		Use this to set the <arg>default latency</arg>, in frames, for audio coming from an 
+		unidentified source or from an iTunes Version 9 or earlier source. The standard value 
+		for the <arg>default latency</arg> is 88,200 frames, where there are 44,100
+    frames to the second.
+    </p>
+    <p>Please note that this feature is deprecated and will be removed in a future version 
+    of shairport-sync.</p>
+    </optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>--meta-dir=</opt><arg>directory</arg></p>
+		<optdesc><p>
+		Listen for metadata coming from the source and send it, along with metadata from
+		shairport-sync itself, to a pipe called <arg>shairport-sync-metadata</arg>
+		in the <arg>directory</arg> you specify. If you add the <opt>--get-cover-art</opt> 
+		then cover art will be sent through the pipe too. See <url 
+		href="https://github.com/mikebrady/shairport-sync-metadata-reader"/>
+		for a sample metadata reader.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-m </opt><arg>mdnsbackend</arg><opt> | --mdns=</opt><arg>mdnsbackend</arg></p>
+		<optdesc><p>
+		Force the use of the specified mDNS backend to advertise the
+    player on the network. The default is to try all mDNS backends until one
+    works.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-o </opt><arg>outputbackend</arg><opt> | 
+		--output=</opt><arg>outputbackend</arg></p>
+		<optdesc><p>
+		Force the use of the specified output backend to play the audio.
+    The default is to try the first one.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-p </opt><arg>port</arg><opt> | --port=</opt><arg>port</arg></p>
+		<optdesc><p>
+		Listen for play requests on <arg>port</arg>. The default is to use port
+    5000.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>--password=</opt><arg>secret</arg></p>
+		<optdesc><p>
+		Require the password <arg>secret</arg> to be able to connect and stream to the 
+		service.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-r </opt><arg>threshold</arg><opt> | --resync=</opt><arg>threshold</arg></p>
+		<optdesc><p>
+		Resynchronise if timings differ by more than <arg>threshold</arg> frames.
+    If the output timing differs from the source timing by more than
+    the threshold, output will be muted and a full resynchronisation
+    will occur. The default threshold is 2,205 frames, i.e. 50
+    milliseconds. Specify <opt>0</opt> to disable resynchronisation. This setting is 
+    deprecated and will be removed in a future version of shairport-sync.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>--statistics</opt></p>
+		<optdesc><p>
+		Print some statistics in the standard output, or in the logfile if in daemon mode.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-S </opt><arg>mode</arg><opt> | --stuffing=</opt><arg>mode</arg></p>
+		<optdesc><p>
+		Stuff the audio stream using the <arg>mode</arg>.  "Stuffing" refers to the
+    process of adding or removing frames of audio  to  or  from  the
+    stream sent to the output device to keep it exactly in synchrony
+    with the player.
+    The default mode, <opt>basic</opt>, is normally almost  completely  inaudible.
+    The  alternative mode, <opt>soxr</opt>, is even less obtrusive but
+    requires much more processing power. For this mode, support for
+    libsoxr, the SoX Resampler Library, must be selected when
+    shairport-sync is compiled.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-t </opt><arg>timeout</arg><opt> | --timeout=</opt><arg>timeout</arg></p>
+		<optdesc><p>
+		Exit play mode if the stream disappears for  more  than  <arg>timeout</arg>
+    seconds.</p>
+    <p>When shairport-sync plays an audio stream, it starts a play
+    session and will return a busy signal to any other sources that
+    attempt to use it. If the audio stream disappears for longer
+    than <arg>timeout</arg> seconds, the play session will be terminated.
+    If you  specify a timeout time of <opt>0</opt>,
+    shairport-sync will never signal that
+    it is busy and will not prevent other sources from "barging in"
+    on an existing play session. The default value is 120 seconds.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>--tolerance=</opt><arg>frames</arg></p>
+		<optdesc><p>
+		Allow playback to be up to <arg>frames</arg> out of exact synchronization before 
+		attempting to correct it.
+		The default is 88 frames, i.e. 2 ms. The smaller the tolerance, the more likely it is 
+		that overcorrection will occur.
+		Overcorrection is when more corrections (insertions and deletions) are made than are 
+		strictly necessary to keep the stream in sync. Use the <opt>--statistics</opt> option 
+		to monitor correction levels. Corrections should not greatly exceed net corrections. 
+		This setting is deprecated and will be removed in a future version of shairport-sync.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-u</opt></p>
+		<optdesc><p>
+		If you are running shairport-sync from the command line and want logs to appear there,
+		use this option. Otherwise, logs may go to the system log.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-V | --version</opt></p>
+		<optdesc><p>
+		Print version information and exit.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-v | --verbose</opt></p>
+		<optdesc><p>
+		Print debug information. Repeat up to three times to get more detail.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-w | --wait-cmd</opt></p>
+		<optdesc><p>
+		Wait for commands specified using <opt>-B</opt> or <opt>-E</opt>  to  complete  before
+    continuing execution.
+		</p></optdesc>
+	  </option>
+
+  <section name="Audio Backend Options">
+  <p>These  command-line options are passed to the chosen audio backend. The audio  
+  backend  options  are
+  preceded by a <opt>--</opt> symbol to introduce them and to separate them from any
+  program options. In this way, option letters can be used  as  program
+  options and also as audio backend options without ambiguity.</p>
+  
+  <p>In the ALSA backend, audio is sent to an output device
+  which you can specify using the <opt>-d</opt> option.
+  The output level (the "volume") is controlled using a level control associated with a 
+  mixer.
+  By default, the mixer is implemented in shairport-sync itself in software.
+  To use a hardware level control on a mixer on the sound card, specify the name of the 
+  mixer control with the <opt>-c</opt> option.
+  If the mixer is not associated with the output device, then you need to specify where 
+  the mixer is to be found with the <opt>-m</opt> option.</p>
+  </section>
+  
+  <option>
+  <p><opt>-c </opt><arg>controlname</arg></p>
+  <optdesc><p>
+  Use the level control called <arg>controlname</arg> on the hardware mixer for
+  controlling volume.
+  This is needed if the mixer type is specified, using the <opt>-t</opt> option,
+  to be <opt>hardware</opt>. There is no default.
+  </p></optdesc>
+  </option>
+
+  <option>
+  <p><opt>-d </opt><arg>device</arg></p>
+  <optdesc><p>
+  Use the specified output <arg>device</arg>. You may specify a card, e.g. 
+  <opt>hw:0</opt>, in which case the default output device on the card will be chosen.
+  Alternatively, you can specify a specific device on a card, e.g. <opt>hw:0,0</opt>.
+  The default is the device named <opt>default</opt>.
+  </p></optdesc>
+  </option>
+
+  <option>
+  <p><opt>-m </opt><arg>mixer</arg></p>
+  <optdesc><p>
+  Use the specified hardware <arg>mixer</arg> for volume control. Use this to specify 
+  where the mixer is to be found. For example, if the mixer is associated with a card,
+  as is often the case, specify the card, e.g. <opt>hw:0</opt>.
+  If (unusually) the mixer is associated with a specific device on a card,
+  specify the device, e.g. <opt>hw:0,1</opt>.
+  The default is the device named in the <opt>-d</opt> option,
+  if given, or the device named <opt>default</opt>.
+  </p></optdesc>
+  </option>
+
+  <option>
+  <p><opt>-t </opt><arg>devicetype</arg></p>
+  <optdesc>
+  <p>
+  This option is deprecated and is ignored. For your information, its functionality has 
+  been automatically incorporated in the -c option
+  -- if you specify a mixer name with the -c option, it is assumed that the mixer is 
+  implemented in hardware.
+  </p></optdesc>
+  </option>
+	</options>
+
+  <section name="Examples">
+  <p>Here is a slightly contrived example:</p>
+      <cmd>shairport-sync  <opt>-d</opt>
+      <opt>-a "Joe's Stereo"</opt>
+      <opt>-S soxr</opt>
+      <opt>--</opt>
+      <opt>-d hw:1,0</opt>
+      <opt>-m hw:1</opt>
+      <opt>-c PCM</opt>      
+      </cmd>
+  <p>The program will run in daemon mode ( <opt>-d</opt> ), will be  visible  as
+  "Joe's Stereo" ( <opt>-a "Joe's Stereo"</opt> ) and will use the SoX Resampler
+  Library-based stuffing ( <opt>-S soxr</opt> ).
+  The audio backend options following the <opt>--</opt> separator specify
+  that  the  audio will be output on output 0 of soundcard 1
+  ( <opt>-d hw:1,0</opt> ) and will take advantage of the same sound card's mixer
+  ( <opt>-m hw:1</opt> ) using the level control named "PCM" ( <opt>-c "PCM"</opt> ).
+  </p>
+  <p>The example above is slightly contrived in order to show the use of the <opt>-m</opt> 
+  option. Typically, output 0 is the default output of a card, so the output device could 
+  be written <opt>-d hw:1</opt> and then the mixer option would be unnecessary, giving the following, simpler, command:</p>
+       <cmd>shairport-sync  <opt>-d</opt>
+      <opt>-a "Joe's Stereo"</opt>
+      <opt>-S soxr</opt>
+      <opt>--</opt>
+      <opt>-d hw:1</opt>
+      <opt>-c PCM</opt>      
+      </cmd>
+ 
+  </section>
+
+	<section name="Credits">
+	<p>Mike Brady developed shairport-sync from the original Shairport by James Laird.</p>
+	<p>shairport-sync can be found at
+	<url href="https://github.com/mikebrady/shairport-sync."/></p>
+  <p>Shairport can be found at
+  <url href="https://github.com/abrasive/shairport."/></p>
+	</section>
+
+	<section name="Comments">
+	<p>This man page was written using <manref name="xml2man" section="1"
+	href="http://masqmail.cx/xml2man/"/> by Oliver Kurth.</p>
+	</section>
+
+  </manpage>
+
