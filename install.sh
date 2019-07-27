@@ -17,7 +17,11 @@ if [[ $EUID -ne 0 ]]; then
 	# Add repo and its GPG key
 	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
 	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list
-
+        
+	# Making directory for data.
+	mkdir service_data
+	cd service_data
+	
 	# Install package
 	echo "Installing Spotify Support"
 	wget https://dtcooper.github.io/raspotify/raspotify-latest.deb
