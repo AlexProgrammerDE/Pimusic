@@ -1,14 +1,14 @@
 #!/bin/sh
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
+   echo "This script must be run as root" | tee -a output.txt
    exit 1
 	else
-	echo "Pi-Soundplayer"
-	echo "Adding needed Keys."
+	echo "Pi-Soundplayer" | tee -a output.txt
+	echo "Adding needed Keys." | tee -a output.txt
 	# Spotify Key
-	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
-	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list
+	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v - | tee -a output.txt
+	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list | tee -a output.txt
 	
 	# Mopidy Keys
 	
