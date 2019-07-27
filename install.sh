@@ -55,7 +55,18 @@ if [[ $EUID -ne 0 ]]; then
 	# Mopidy Soundcloud
 	sudo apt-get install mopidy-soundcloud
 	
-	# Mopidy
+	# Mopidy Youtube
+	pip install Mopidy-YouTube
+	
+	# Mopidy Scrobbler
+	pip install Mopidy-Scrobbler
+	
+	# Mopidy ALSA Mixer
+	pip install Mopidy-ALSAMixer
+	
+	# Mopidy Tunein
+	pip install Mopidy-TuneIn
+	
 	# Bluetooth script
 	echo "Installing Bluetooth Support"
 	cd ..
