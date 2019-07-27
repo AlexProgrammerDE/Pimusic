@@ -5,6 +5,14 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 	else
 	echo "Pi-Soundplayer"
+	# Spotify Key
+	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
+	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list
+	
+	# Mopidy Keys
+	wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
+	sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/stretch.list
+	
 	# Get updates
 	echo "Updating System"
 	sudo apt-get update
@@ -14,19 +22,13 @@ if [[ $EUID -ne 0 ]]; then
 	echo "Getting needed Packages"
 	sudo apt-get -y install wget gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 python-gst-1.0 python-dev python-pip curl alsa-base alsa-utils bluealsa bluez bluez-firmware python-gobject python-dbus mpg123 autotools-dev apt-transport-https dh-autoreconf git xmltoman autoconf automake libtool libpopt-dev libconfig-dev libasound2-dev avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
 
-	# Add repo and its GPG key
-	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
-	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list
-        
 	# Making directory for data.
 	mkdir service_data
 	cd service_data
 	
 	# Install package
 	echo "Installing Spotify Support"
-	wget https://dtcooper.github.io/raspotify/raspotify-latest.deb
-	sudo dpkg -i raspotify-latest.deb
-	sudo rm raspotify-latest.deb
+	sudo apt-get -y install raspotify
 
 	# Script for Airplay
 	echo "Installing Airplay Support"
@@ -42,7 +44,7 @@ if [[ $EUID -ne 0 ]]; then
 
 	#Mopidy is in planning
 	#echo "Installing Mopidy Support"
-	#sudo pip install -U mopidy
+	sudo apt-get -y install mopidy
 
 	# Bluetooth script
 	echo "Installing Bluetooth Support"
