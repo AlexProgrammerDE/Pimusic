@@ -24,7 +24,7 @@ Now comes the fun part.
 
 First we update the system and install git.
 ```
-sudo apt-get update && sudo apt-get upgrade && sudo apt-get install wget
+sudo apt-get update && sudo apt-get install -y wget
 ```
 This can take some time...
 
