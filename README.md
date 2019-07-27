@@ -32,11 +32,7 @@ Now we clone my installation script.
 ```
 wget https://raw.githubusercontent.com/AlexProgrammerDE/Musicpi/master/install.sh
 ```
-After the repository is cloned we go in it.
-```
-cd Pi-Soundplayer
-```
-Now we run my installation script.
+Finally we run my installation script.
 ```
 sudo bash install.sh
 ```
