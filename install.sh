@@ -22,6 +22,7 @@ if [[ $EUID -ne 0 ]]; then
 	echo "Installing Spotify Support"
 	wget https://dtcooper.github.io/raspotify/raspotify-latest.deb
 	sudo dpkg -i raspotify-latest.deb
+	sudo rm raspotify-latest.deb
 
 	# Script for Airplay
 	echo "Installing Airplay Support"
