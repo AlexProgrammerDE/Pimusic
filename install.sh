@@ -5,11 +5,13 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 	else
 	echo "Pi-Soundplayer"
+	echo "Adding needed Keys."
 	# Spotify Key
 	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
 	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list
 	
 	# Mopidy Keys
+	
 	wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
 	sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/stretch.list
 	
@@ -45,6 +47,8 @@ if [[ $EUID -ne 0 ]]; then
 	#Mopidy is in planning
 	#echo "Installing Mopidy Support"
 	sudo apt-get -y install mopidy
+	sudo systemctl enable mopidy
+	sudo systemctl start mopidy
 
 	# Bluetooth script
 	echo "Installing Bluetooth Support"
