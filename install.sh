@@ -2,4 +2,5 @@
 
 mkdir Musicpi
 cd Musicpi
-wget
+wget https://raw.githubusercontent.com/AlexProgrammerDE/Musicpi/master/install-services.sh
+sudo bash install-services.sh
