@@ -30,7 +30,7 @@ This can take some time...
 
 Now we clone my installation script.
 ```
-git clone https://github.com/AlexProgrammerDE/Pi-Soundplayer.git
+wget https://raw.githubusercontent.com/AlexProgrammerDE/Musicpi/master/install.sh
 ```
 After the repository is cloned we go in it.
 ```
