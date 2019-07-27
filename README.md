@@ -28,7 +28,7 @@ sudo apt-get update && sudo apt-get upgrade && sudo apt-get install git
 ```
 This can take some time...
 
-Now we clone my repository.
+Now we clone my installation script.
 ```
 git clone https://github.com/AlexProgrammerDE/Pi-Soundplayer.git
 ```
