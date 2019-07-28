@@ -6,7 +6,7 @@ if [[ $EUID -ne 0 ]]; then
 	else
     	mkdir Pimusic
     	cd Pimusic
-    	wget https://raw.githubusercontent.com/AlexProgrammerDE/Musicpi/master/install-services.sh
+    	wget https://raw.githubusercontent.com/AlexProgrammerDE/Pimusic/master/install-services.sh
     	sudo bash install-services.sh | tee -a output.txt
     	cd ..
     	rm install.sh
