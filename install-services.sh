@@ -19,6 +19,7 @@ if [[ $EUID -ne 0 ]]; then
 	sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/stretch.list
 	
 	# Get updates
+	clear
 	echo "Updating System"
 	echo ""
 	sudo apt-get update
@@ -32,21 +33,22 @@ if [[ $EUID -ne 0 ]]; then
 	# Making directory for data.
 	mkdir service_data
 	cd service_data
-	echo ""
+	clear
 	echo "Installing"
 	echo ""
 	# Install package
+	clear
 	echo "Installing Spotify Support"
 	echo ""
 	sudo apt-get -y install raspotify
 
 	# Script for Airplay
-	echo ""
+	clear
 	echo "Installing Airplay Support"
 	echo ""
 	git clone https://github.com/mikebrady/shairport-sync.git
 	cd shairport-sync
-	echo ""
+	clear
 	echo "Wait please. This can take some time."
 	echo ""
 	autoreconf -fi
@@ -57,26 +59,31 @@ if [[ $EUID -ne 0 ]]; then
 	systemctl start shairport-sync
 
 	# Mopidy script 
-	echo ""
+	clear
 	echo "Installing Mopidy Support"
 	echo ""
 	sudo apt-get -y install mopidy
 	sudo systemctl enable mopidy
-	sudo systemctl start mopidy
+	
 	# Mopidy Spotify
+	clear
 	sudo apt-get install -y mopidy-spotify
 	
 	# Mopidy Soundcloud
+	clear
 	sudo apt-get install mopidy-soundcloud
 	
 	# Mopidy Scrobbler
+	clear
 	pip install Mopidy-Scrobbler
 	
 	# Mopidy Tunein
+	clear
 	pip install Mopidy-TuneIn
-	
+	# Mopidy start
+	sudo systemctl start mopidy
 	# Bluetooth script
-	echo ""
+	clear
 	echo "Installing Bluetooth Support"
 	echo ""
 	cd ..
@@ -85,7 +92,7 @@ if [[ $EUID -ne 0 ]]; then
 	export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
 
 	# Copy sounds
-	echo ""
+	clear
 	echo "copying files"
 	echo ""
 	cp -r ./bluetooth-player/sounds/ /usr/src/sounds/
@@ -103,7 +110,7 @@ if [[ $EUID -ne 0 ]]; then
 	cp -r ./bluetooth-player/start.sh /usr/src/
 	chmod +x /usr/src/start.sh
 	
-	echo ""
+	clear
 	echo "installing bluetooth-player service"
 	echo ""
 	sudo ln -sf /usr/src/start.sh /usr/local/bin/start_bt_player
@@ -114,5 +121,5 @@ if [[ $EUID -ne 0 ]]; then
 	echo "Starting Bluetooth Support"
 	echo ""
 	systemctl start bluetooth-player.service
-
+	clear
 fi
