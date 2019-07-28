@@ -18,7 +18,7 @@ Airplay: https://github.com/mikebrady/shairport-sync
 
 Bluetooth: https://github.com/AdityaTelange/rpi-bluetooth-audio-player
 
-Maybe there can be found help.
+Maybe can be found there help.
 
 Now comes the fun part. 
 
