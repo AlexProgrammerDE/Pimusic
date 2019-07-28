@@ -30,7 +30,7 @@ This can take some time...
 
 Now we clone my installation script.
 ```
-wget https://raw.githubusercontent.com/AlexProgrammerDE/Musicpi/master/install.sh
+wget https://raw.githubusercontent.com/AlexProgrammerDE/Pimusic/master/install.sh
 ```
 Finally we run my installation script.
 ```
