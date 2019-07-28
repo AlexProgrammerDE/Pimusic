@@ -18,6 +18,16 @@ Airplay: https://github.com/mikebrady/shairport-sync
 
 Bluetooth: https://github.com/AdityaTelange/rpi-bluetooth-audio-player
 
+Mopidy: https://github.com/mopidy/mopidy
+
+Mopidy-Spotify: https://github.com/mopidy/mopidy-spotify
+
+Mopidy-Tunein: https://github.com/kingosticks/mopidy-tunein
+
+Mopidy-Soundcloud: https://github.com/mopidy/mopidy-soundcloud
+
+Mopidy-Scrobbler: https://github.com/mopidy/mopidy-scrobbler
+
 Maybe can be found there help.
 
 Now comes the fun part. 
