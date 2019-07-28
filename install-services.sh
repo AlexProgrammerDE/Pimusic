@@ -4,13 +4,17 @@ if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root"
    exit 1
 	else
-	echo "Pi-Soundplayer"
+	clear
+	echo "Pimusic Installation"
+	echo ""
+	echo "Preparing the System for Installation"
+	echo""
 	echo "Adding needed Keys."
 	# Spotify Key
 	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
 	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list
 	
-	# Mopidy Keys
+	# Mopidy Key
 	wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
 	sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/stretch.list
 	
@@ -26,7 +30,7 @@ if [[ $EUID -ne 0 ]]; then
 	# Making directory for data.
 	mkdir service_data
 	cd service_data
-	
+	echo "Installing"
 	# Install package
 	echo "Installing Spotify Support"
 	sudo apt-get -y install raspotify
@@ -89,7 +93,7 @@ if [[ $EUID -ne 0 ]]; then
 	cp ./bluetooth-player/bluetooth-player.service /etc/systemd/system/
 
 	echo "done !!!" 
-	echo "starting bt player"
+	echo "Starting Bluetooth Support"
 	systemctl start bluetooth-player.service
 
 fi
