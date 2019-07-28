@@ -1,4 +1,4 @@
-# Musicpi
+# Pimusic
 
 This repository is created to give everyone the possibility to play Music on the Raspberry Pi.
 
