@@ -29,7 +29,7 @@ if [[ $EUID -ne 0 ]]; then
 	echo "Deleting directory service_data"
 	sudo rm service_data
 	mkdir service_data
-	cd servie_data
+	cd service_data
 	
 	clear
 	echo "Updating Spotify Connect"
