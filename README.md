@@ -1,3 +1,14 @@
+<!doctype html>
+<html>
+	<head>
+		<title>
+			My Website
+		</title>
+	</head>
+  
+	<body>
+		Hello, World!	
+
 <img src="https://raw.githubusercontent.com/AlexProgrammerDE/Pimusic/master/logo.png" alt="Pimusic" width="400">
 
 This repository is created to give everyone the possibility to play Music on the Raspberry Pi.
