@@ -75,6 +75,7 @@ if [[ $EUID -ne 0 ]]; then
 	# Mopidy start
 	sudo systemctl start mopidy
 	
+	clear
 	echo "Updating bletooth support"
 	cd ..
         rm -rf /usr/src/sounds/
@@ -120,8 +121,4 @@ if [[ $EUID -ne 0 ]]; then
 	echo ""
 	systemctl start bluetooth-player.service
 	clear
-	
-	echo "Updating Spotify Connect" 
-
-
 fi
