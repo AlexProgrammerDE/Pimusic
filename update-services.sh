@@ -119,6 +119,7 @@ if [[ $EUID -ne 0 ]]; then
 	echo ""
 	echo "Starting Bluetooth Support"
 	echo ""
-	systemctl start bluetooth-player.service
+	sudo systemctl enable bluetooth-player.service
+	sudo systemctl start bluetooth-player.service
 	clear
 fi
