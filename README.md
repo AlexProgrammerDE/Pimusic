@@ -1,4 +1,4 @@
-# Pimusic
+<img src="https://raw.githubusercontent.com/thedaviddias/Front-End-Checklist/master/src/img/banners/logo-front-end-checklist.jpg" alt="Front-End Checklist" width="170">
 
 This repository is created to give everyone the possibility to play Music on the Raspberry Pi.
 
