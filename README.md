@@ -47,3 +47,12 @@ Finally we run my installation script.
 sudo bash install.sh
 ```
 So youre finished good luck. :)
+
+If you want to update the services you need to go only in the directory Pimsic with:
+```
+cd Pimusic
+```
+And then you need to start
+```
+sudo bash update-services.sh | tee -a update-output.txt
+```
