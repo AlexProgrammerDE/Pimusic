@@ -5,7 +5,6 @@
 			My Website
 		</title>
 	</head>
-  
 	<body>
 		Hello, World!	
 
