@@ -6,7 +6,6 @@
 		</title>
 	</head>
 	<body>
-		Hello, World!	
 
 <img src="https://raw.githubusercontent.com/AlexProgrammerDE/Pimusic/master/logo.png" alt="Pimusic" width="400">
 
