@@ -18,8 +18,6 @@ But report me the Issue and I will try to fix it.
 
 I am using already the following repositorys:
 
-- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) `#f03c15`
-
 Spotify Connect: https://github.com/dtcooper/raspotify
 
 Airplay: https://github.com/mikebrady/shairport-sync
