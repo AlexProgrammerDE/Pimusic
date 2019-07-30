@@ -6,6 +6,8 @@
 
 <img src="https://raw.githubusercontent.com/AlexProgrammerDE/Pimusic/master/logo.png" alt="Pimusic" width="400">
 
+<a href="https://codebeat.co/projects/github-com-alexprogrammerde-pimusic-master"><img alt="codebeat badge" src="https://codebeat.co/badges/f856fb83-919c-4356-9317-e3bd79817871" /></a>
+
 This repository is created to give everyone the possibility to play Music on the Raspberry Pi.
 
 This Repository installs multiple music service repositorys to let you play music by Spotify Connect, Airplay and Bluetooth.
