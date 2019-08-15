@@ -93,7 +93,7 @@ if [[ $EUID -ne 0 ]]; then
 	export UDEV=1
 
 	echo "installing packages.."
-	apt-get install alsa-base alsa-utils bluealsa bluez bluez-firmware python-gobject python-dbus mpg123
+	sudo apt-get install alsa-base alsa-utils bluealsa bluez bluez-firmware python-gobject python-dbus mpg123
 	# bluez-firmware
 
 	# Copy sounds
