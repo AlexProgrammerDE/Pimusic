@@ -90,11 +90,14 @@ if [[ $EUID -ne 0 ]]; then
 	git clone https://github.com/AlexProgrammerDE/rpi-bluetooth-audio-player.git
 	cd rpi-bluetooth-audio-player
 	export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+	export UDEV=1
+
+	echo "installing packages.."
+	apt-get install alsa-base alsa-utils bluealsa bluez bluez-firmware python-gobject python-dbus mpg123
+	# bluez-firmware
 
 	# Copy sounds
-	clear
 	echo "copying files"
-	echo ""
 	cp -r ./bluetooth-player/sounds/ /usr/src/sounds/
 
 	# Setup udev rules - this lets us play the connect/disconnect sound
@@ -109,17 +112,13 @@ if [[ $EUID -ne 0 ]]; then
 
 	cp -r ./bluetooth-player/start.sh /usr/src/
 	chmod +x /usr/src/start.sh
-	
-	clear
+
 	echo "installing bluetooth-player service"
-	echo ""
 	sudo ln -sf /usr/src/start.sh /usr/local/bin/start_bt_player
 	cp ./bluetooth-player/bluetooth-player.service /etc/systemd/system/
-	echo""
-	echo "done !!!" 
-	echo ""
-	echo "Starting Bluetooth Support"
-	echo ""
+
+	echo "done !!!"
+	echo "starting bt player"
 	systemctl start bluetooth-player.service
 	clear
 fi
