@@ -4,7 +4,7 @@
 	</head>
 	<body>
 						<div>
-<img src="https://raw.githubusercontent.com/AlexProgrammerDE/Pimusic/master/logo-white.png" alt="Pimusic" width="400">
+<img src="https://raw.githubusercontent.com/AlexProgrammerDE/Pimusic/master/logo.png" alt="Pimusic" width="400">
 						</div>
 		
 [![HitCount](http://hits.dwyl.io/AlexProgrammerDE/Pimusic.svg)](http://hits.dwyl.io/AlexProgrammerDE/Pimusic)
