@@ -9,7 +9,7 @@
 		
 [![HitCount](http://hits.dwyl.io/AlexProgrammerDE/Pimusic.svg)](http://hits.dwyl.io/AlexProgrammerDE/Pimusic)
 
-This repository is created to give everyone the possibility to play Music on the Raspberry Pi.
+This repository is created to install fast everyone the the needed packages to play Music on the Raspberry Pi.
 
 This Repository installs multiple music service repositorys to let you play music by Spotify Connect, Airplay and Bluetooth.
 
