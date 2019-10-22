@@ -37,43 +37,8 @@ if [[ $EUID -ne 0 ]]; then
 	sudo apt-get -y install raspotify
 	
 	clear
-	echo "Updating airplay"
-	sudo rm /usr/local/bin/shairport-sync
-	git clone https://github.com/mikebrady/shairport-sync.git
-	cd shairport-sync
-	clear
-	echo "Wait please. This can take some time."
-	echo ""
-	autoreconf -fi
-	./configure --sysconfdir=/etc --with-alsa --with-soxr --with-avahi --with-ssl=openssl --with-systemd
-	make
-	sudo make install
-	systemctl enable shairport-sync
-	systemctl start shairport-sync
-	
-	clear
-	echo "Updating Mopidy Support"
-	echo ""
-	sudo apt-get -y install mopidy
-	sudo systemctl enable mopidy
-	
-	# Mopidy Spotify
-	clear
-	sudo apt-get install -y mopidy-spotify
-	
-	# Mopidy Soundcloud
-	clear
-	sudo apt-get install mopidy-soundcloud
-	
-	# Mopidy Scrobbler
-	clear
-	pip install Mopidy-Scrobbler
-	
-	# Mopidy Tunein
-	clear
-	pip install Mopidy-TuneIn
-	# Mopidy start
-	sudo systemctl start mopidy
+	echo "Updating Airplay"
+	sudo apt-get -y shairport-sync
 	
 	clear
 	echo "Updating bletooth support"
