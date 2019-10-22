@@ -14,10 +14,6 @@ if [[ $EUID -ne 0 ]]; then
 	curl -sSL https://dtcooper.github.io/raspotify/key.asc | sudo apt-key add -v -
 	echo 'deb https://dtcooper.github.io/raspotify raspotify main' | sudo tee /etc/apt/sources.list.d/raspotify.list
 	
-	# Mopidy Key
-	wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
-	sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/stretch.list
-	
 	# Get updates
 	clear
 	echo "Updating System"
@@ -58,30 +54,6 @@ if [[ $EUID -ne 0 ]]; then
 	systemctl enable shairport-sync
 	systemctl start shairport-sync
 
-	# Mopidy script 
-	clear
-	echo "Installing Mopidy Support"
-	echo ""
-	sudo apt-get -y install mopidy
-	sudo systemctl enable mopidy
-	
-	# Mopidy Spotify
-	clear
-	sudo apt-get install -y mopidy-spotify
-	
-	# Mopidy Soundcloud
-	clear
-	sudo apt-get install mopidy-soundcloud
-	
-	# Mopidy Scrobbler
-	clear
-	pip install Mopidy-Scrobbler
-	
-	# Mopidy Tunein
-	clear
-	pip install Mopidy-TuneIn
-	# Mopidy start
-	sudo systemctl start mopidy
 	# Bluetooth script
 	clear
 	echo "Installing Bluetooth Support"
