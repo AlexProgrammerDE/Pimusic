@@ -24,10 +24,14 @@ if [[ $EUID -ne 0 ]]; then
 	# Install needed packages 
 	echo "Updatingg needed Packages"
 	echo ""
-	sudo apt-get -y install wget gstreamer1.0-plugins-bad gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 python-gst-1.0 python-dev python-pip curl alsa-base alsa-utils bluealsa bluez bluez-firmware python-gobject python-dbus mpg123 autotools-dev apt-transport-https dh-autoreconf git xmltoman autoconf automake libtool libpopt-dev libconfig-dev libasound2-dev avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
+	sudo apt-get install -y alsa-utils bluealsa bluez bluez-tools mplayer
+
+	# Ask for Device name
 	clear
+	read -p “ Type in here the discoverable name of the Device: ” DEVICE_NAME
+
 	echo "Deleting directory service_data"
-	sudo rm service_data
+	sudo rm -r service_data
 	mkdir service_data
 	cd service_data
 	
@@ -35,10 +39,33 @@ if [[ $EUID -ne 0 ]]; then
 	echo "Updating Spotify Connect"
 	echo ""
 	sudo apt-get -y install raspotify
+	cat <<EOF >> /etc/default/raspotify
+	DEVICE_NAME="$DEVICE_NAME"
+	EOF
 	
 	clear
 	echo "Updating Airplay"
 	sudo apt-get -y shairport-sync
+	cat <<EOF >> shairport-sync.sh
+	!/bin/bash
+
+	shairport-sync -a "$DEVICE_NAME"
+	EOF
+	
+	cat <<EOF >> /etc/systemd/system/Pimusic-shairport-sync.service
+	[Unit]
+	Description=Shairport-Sync
+	
+	[Service]
+	ExecStart=/home/pi/Pimusic/service_data/shairport-sync.sh
+	
+	[Install]
+	WantedBy=multi-user.target
+	EOF
+
+	sudo systemctl enable Pimusic-shairport-sync
+	sudo systemctl start Pimusic-shairport-sync
+
 	
 	clear
 	echo "Updating bletooth support"

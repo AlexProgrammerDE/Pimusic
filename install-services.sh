@@ -21,9 +21,16 @@ if [[ $EUID -ne 0 ]]; then
 	sudo apt-get update
 	sudo apt-get -y upgrade
 	sudo apt -y autoremove
+
 	# Install needed packages 
+	clear
 	echo "Getting needed Packages"
 	echo ""
+	sudo apt-get install -y alsa-utils bluealsa bluez bluez-tools mplayer
+
+	# Ask for Device name
+	clear
+	read -p “ Type in here the discoverable name of the Device: ” DEVICE_NAME
 
 	# Making directory for data.
 	mkdir service_data
@@ -36,12 +43,34 @@ if [[ $EUID -ne 0 ]]; then
 	echo "Installing Spotify Support"
 	echo ""
 	sudo apt-get -y install raspotify
+	cat <<EOF >> /etc/default/raspotify
+	DEVICE_NAME="$DEVICE_NAME"
+	EOF
 
 	# Script for Airplay
 	clear
 	echo "Installing Airplay Support"
 	echo ""
 	sudo apt-get -y shairport-sync
+	cat <<EOF >> shairport-sync.sh
+	!/bin/bash
+
+	shairport-sync -a "$DEVICE_NAME"
+	EOF
+	
+	cat <<EOF >> /etc/systemd/system/Pimusic-shairport-sync.service
+	[Unit]
+	Description=Shairport-Sync
+	
+	[Service]
+	ExecStart=/home/pi/Pimusic/service_data/shairport-sync.sh
+	
+	[Install]
+	WantedBy=multi-user.target
+	EOF
+
+	sudo systemctl enable Pimusic-shairport-sync
+	sudo systemctl start Pimusic-shairport-sync
 
 	# Bluetooth script
 	clear
