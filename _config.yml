@@ -1,1 +1,5 @@
+title: Pimusic
+logo: logo.png
+description: A easy and comfortable way to use Bluetooth, Airplay, Spotify Connect and Mopidy.
+show_downloads: true
 theme: jekyll-theme-minimal
